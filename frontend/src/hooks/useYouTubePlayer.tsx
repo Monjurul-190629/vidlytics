@@ -1,5 +1,10 @@
 import { useEffect } from "react";
 
+declare global {
+  interface Window {
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
 interface props{
     video_id: string;
 }
@@ -18,7 +23,9 @@ const useYouTubePlayer = ({video_id} : props) => {
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
 
-    console.log("Youtube player is running")
+    window.onYouTubeIframeAPIReady = () => {
+        console.log("youtube api is running")
+    };
 
   }, [])
   return (
