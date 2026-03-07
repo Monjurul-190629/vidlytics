@@ -12,6 +12,16 @@ export default function Home() {
           height={20}
           priority
         />
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/7fIvHuqiLws?si=c6tsDXX60JFCBkrd"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
