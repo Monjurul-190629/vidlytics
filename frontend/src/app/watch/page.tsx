@@ -1,11 +1,13 @@
 "use client";
 
+import useYouTubePlayer from "@/hooks/useYouTubePlayer";
 import { useSearchParams } from "next/navigation";
 
 const page = () => {
   const searchParams = useSearchParams();
-  const video_id = searchParams.get("v");
+  const video_id = searchParams.get("v") ?? "";
   const url = `https://www.youtube.com/embed/${video_id}`;
+  useYouTubePlayer({ video_id });
   return (
     <>
       <h1>Watch : {video_id}</h1>
