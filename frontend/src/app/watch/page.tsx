@@ -45,7 +45,7 @@ const page = () => {
           console.log("error adding data to the backend");
         } else {
           const responseData = await response.json();
-          console.log("db data is", responseData);
+          console.log("db data", responseData);
         }
       } catch (error) {
         console.log(error);
