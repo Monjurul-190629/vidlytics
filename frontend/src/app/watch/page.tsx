@@ -9,7 +9,10 @@ const page = () => {
 
   const playerElementId = "youtube-player";
 
-  useYouTubePlayer({ video_id, elementId: playerElementId });
+  const playerState = useYouTubePlayer({
+    video_id,
+    elementId: playerElementId,
+  });
 
   return (
     <div className="w-[50vw] mx-auto h-full px-5">
@@ -21,7 +24,9 @@ const page = () => {
           />
         </div>
       </div>
-      <h1>Watch : {video_id}</h1>
+      <h1>
+        Watch : {video_id} - {playerState?.isReady ? "Ready" : "Loading"}
+      </h1>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -15,6 +15,13 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
   // load youtube api script
   // embed youtube video player
   // track changes to video
+
+  // state
+  const [playerState, setPlayerState] = useState({
+    isReady: false,
+    currentTime: 0,
+  });
+  const playerRef = useRef<YT.Player | null>(null);
   useEffect(() => {
     // 2. This code loads the IFrame Player API code asynchronously.
     var tag = document.createElement("script");
@@ -37,14 +44,18 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
           playsinline: 1,
         },
         events: {
-          onReady: (event: any) => console.log("on ready", event),
+          onReady: handleOnReady,
           onStateChange: (event: any) => console.log("on state change", event),
         },
       };
-      new window.YT.Player(elementId, videoOptions)
+      playerRef.current = new window.YT.Player(playerElementId, videoOptions);
     };
   }, [video_id]);
-  return <div>useYouTubePlayer</div>;
+
+  const handleOnReady = useCallback((event: any) => {
+    setPlayerState((prev) => ({ ...prev, isReady: true }));
+  }, []);
+  return playerState;
 };
 
 export default useYouTubePlayer;
