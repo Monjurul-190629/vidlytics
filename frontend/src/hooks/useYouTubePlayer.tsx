@@ -10,6 +10,10 @@ interface props {
   elementId: string;
 }
 
+function getKeyByValue(object: any, value: any) {
+  return Object.keys(object).find((key) => object[key] === value);
+}
+
 const useYouTubePlayer = ({ video_id, elementId }: props) => {
   const playerElementId = elementId ?? "video player";
   // load youtube api script
@@ -20,6 +24,9 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
   const [playerState, setPlayerState] = useState({
     isReady: false,
     currentTime: 0,
+    video_title: "",
+    video_state_label: "",
+    video_state_value: -10,
   });
   const playerRef = useRef<YT.Player | null>(null);
   useEffect(() => {
@@ -45,7 +52,7 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
         },
         events: {
           onReady: handleOnReady,
-          onStateChange: (event: any) => console.log("on state change", event),
+          onStateChange: handleOnStateChange,
         },
       };
       playerRef.current = new window.YT.Player(playerElementId, videoOptions);
@@ -55,6 +62,25 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
   const handleOnReady = useCallback((event: any) => {
     setPlayerState((prev) => ({ ...prev, isReady: true }));
   }, []);
+
+  const handleOnStateChange = useCallback(() => {
+    if (!playerRef.current) return;
+
+    const YTPlayerStateObj = window.YT.PlayerState;
+    const videoStateValue = playerRef.current.getPlayerState();
+    const videoData = playerRef.current.getVideoData();
+    const currentTimeSeconds = playerRef.current.getCurrentTime();
+    const videoStateLabel = getKeyByValue(YTPlayerStateObj, videoStateValue);
+
+    setPlayerState((prevState) => ({
+      ...prevState,
+      video_title: videoData.title,
+      currentTime: currentTimeSeconds,
+      video_state_label: videoStateLabel ?? "",
+      video_state_value: videoStateValue,
+    }));
+  }, [playerRef]);
+
   return playerState;
 };
 
