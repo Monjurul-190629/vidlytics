@@ -8,13 +8,20 @@ declare global {
 interface props {
   video_id: string;
   elementId: string;
+  startTime: number;
+  interval: number;
 }
 
 function getKeyByValue(object: any, value: any) {
   return Object.keys(object).find((key) => object[key] === value);
 }
 
-const useYouTubePlayer = ({ video_id, elementId }: props) => {
+const useYouTubePlayer = ({
+  video_id,
+  elementId,
+  startTime = 200,
+  interval = 5000,
+}: props) => {
   const playerElementId = elementId ?? "video player";
   // load youtube api script
   // embed youtube video player
@@ -49,6 +56,7 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
         videoId: video_id,
         playerVars: {
           playsinline: 1,
+          start: startTime,
         },
         events: {
           onReady: handleOnReady,
@@ -59,8 +67,19 @@ const useYouTubePlayer = ({ video_id, elementId }: props) => {
     };
   }, [video_id]);
 
+  useEffect(() => {
+    const internvalId = setInterval(() => {
+      handleOnStateChange();
+    }, Number(interval));
+
+    return () => {
+      clearInterval(internvalId);
+    };
+  }, []);
+
   const handleOnReady = useCallback((event: any) => {
     setPlayerState((prev) => ({ ...prev, isReady: true }));
+    handleOnStateChange();
   }, []);
 
   const handleOnStateChange = useCallback(() => {

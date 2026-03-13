@@ -7,11 +7,17 @@ const page = () => {
   const searchParams = useSearchParams();
   const video_id = searchParams.get("v") ?? "";
 
+  const startTime = Number(searchParams.get("t")) ?? 0;
+
+  const interval = 1500;
+
   const playerElementId = "youtube-player";
 
   const playerState = useYouTubePlayer({
     video_id,
     elementId: playerElementId,
+    startTime,
+    interval,
   });
 
   return (
@@ -24,9 +30,11 @@ const page = () => {
           />
         </div>
       </div>
+      <h1 className="text-xl">{playerState.video_title}</h1>
       <h1>
         Watch : {video_id} - {playerState?.isReady ? "Ready" : "Loading"}
       </h1>
+      <div>{playerState && JSON.stringify(playerState)}</div>
     </div>
   );
 };
