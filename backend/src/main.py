@@ -5,6 +5,8 @@ from typing import Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.video_events.routing import router as video_events_router
+
 host_origin = ""
 host_origin_portless = ""
 
@@ -38,6 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(video_events_router, prefix='/api/video-events')
 
 @app.get("/")
 def read_root():
