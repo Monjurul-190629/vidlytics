@@ -1,6 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
+
+from sqlmodel import Session
+
+from api.db.session import get_session
 
 from .models import (
     YouTubePlayerState, 
@@ -14,6 +18,7 @@ router = APIRouter()
 def create_video_event(
         request: Request, 
         payload: YouTubePlayerState,
+        db_session: Session = Depends(get_session)  
     ):
     headers = request.headers
     print()
